@@ -4,6 +4,8 @@ const { storeFile } = require("../utils/fileStorage");
 
 const createPengajuan = async (req, res) => {
   try {
+    console.log("DATA MASUK PENGAJUAN:", req.body);
+
     const { nama_lengkap, nik, alamat, jenis_surat, keperluan } = req.body;
 
     if (!nama_lengkap || !nik || !alamat || !jenis_surat || !keperluan) {
@@ -25,6 +27,7 @@ const createPengajuan = async (req, res) => {
       data: { id: result.insertId, kode_tiket },
     });
   } catch (error) {
+    console.error("ERROR SIMPAN PENGAJUAN:", error);
     return res.status(500).json({ message: "Gagal membuat pengajuan.", error: error.message });
   }
 };
@@ -34,6 +37,7 @@ const getAllPengajuan = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM pengajuan_surat ORDER BY created_at DESC");
     return res.json({ data: rows });
   } catch (error) {
+    console.error("ERROR AMBIL PENGAJUAN:", error);
     return res.status(500).json({ message: "Gagal mengambil data pengajuan.", error: error.message });
   }
 };
@@ -44,6 +48,7 @@ const getPengajuanById = async (req, res) => {
     if (!rows.length) return res.status(404).json({ message: "Data pengajuan tidak ditemukan." });
     return res.json({ data: rows[0] });
   } catch (error) {
+    console.error("ERROR AMBIL DETAIL PENGAJUAN:", error);
     return res.status(500).json({ message: "Gagal mengambil detail pengajuan.", error: error.message });
   }
 };
@@ -68,6 +73,7 @@ const updatePengajuanStatus = async (req, res) => {
 
     return res.json({ message: "Status pengajuan berhasil diperbarui." });
   } catch (error) {
+    console.error("ERROR UPDATE STATUS PENGAJUAN:", error);
     return res.status(500).json({ message: "Gagal memperbarui status pengajuan.", error: error.message });
   }
 };

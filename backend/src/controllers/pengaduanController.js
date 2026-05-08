@@ -40,6 +40,7 @@ const getAllPengaduan = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM pengaduan ORDER BY created_at DESC");
     return res.json({ data: rows });
   } catch (error) {
+    console.error("ERROR AMBIL PENGADUAN:", error);
     return res.status(500).json({ message: "Gagal mengambil data pengaduan.", error: error.message });
   }
 };
@@ -50,6 +51,7 @@ const getPengaduanById = async (req, res) => {
     if (!rows.length) return res.status(404).json({ message: "Data pengaduan tidak ditemukan." });
     return res.json({ data: rows[0] });
   } catch (error) {
+    console.error("ERROR AMBIL DETAIL PENGADUAN:", error);
     return res.status(500).json({ message: "Gagal mengambil detail pengaduan.", error: error.message });
   }
 };
@@ -74,6 +76,7 @@ const updatePengaduanStatus = async (req, res) => {
 
     return res.json({ message: "Status pengaduan berhasil diperbarui." });
   } catch (error) {
+    console.error("ERROR UPDATE STATUS PENGADUAN:", error);
     return res.status(500).json({ message: "Gagal memperbarui status pengaduan.", error: error.message });
   }
 };

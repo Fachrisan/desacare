@@ -44,6 +44,7 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("ERROR LOGIN ADMIN:", error);
     return res.status(500).json({ message: "Terjadi kesalahan server.", error: error.message });
   }
 };

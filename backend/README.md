@@ -75,12 +75,19 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=desacare_db
 DB_PORT=3306
+DB_CONNECT_TIMEOUT=10000
+DB_SSL=false
+DB_SSL_REJECT_UNAUTHORIZED=true
 JWT_SECRET=desacare_secret_key
 AWS_REGION=ap-southeast-1
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_S3_BUCKET=
 ```
+
+Untuk AWS ECS + RDS, isi `DB_HOST` dengan endpoint RDS, bukan `localhost` dan bukan nama service Docker lokal seperti `mysql`.
+Pastikan security group RDS mengizinkan inbound MySQL port `3306` dari security group ECS service/task.
+Endpoint `GET /api/health` akan mencoba query database dan menampilkan ringkasan konfigurasi tanpa password.
 
 ## Aturan Upload File
 

@@ -24,6 +24,7 @@ const checkStatus = async (req, res) => {
 
     return res.status(404).json({ message: "Kode tiket tidak ditemukan." });
   } catch (error) {
+    console.error("ERROR CEK STATUS:", error);
     return res.status(500).json({ message: "Gagal cek status.", error: error.message });
   }
 };
