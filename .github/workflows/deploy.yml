@@ -26,20 +26,18 @@ jobs:
 
       - name: Build, tag, and push frontend image
         env:
-          ECR_FRONTEND_REPOSITORY: ${{ secrets.ECR_FRONTEND_REPOSITORY }}
+          ECR_FRONTEND_REPOSITORY: 596432515527.dkr.ecr.ap-southeast-1.amazonaws.com/desacare-frontend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           set -euo pipefail
-          docker build -t desacare-frontend:$IMAGE_TAG ./frontend
-          docker tag desacare-frontend:$IMAGE_TAG $ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
+          docker build -t "$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG" ./frontend
+          docker push "$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG"
 
       - name: Build, tag, and push backend image
         env:
-          ECR_BACKEND_REPOSITORY: ${{ secrets.ECR_BACKEND_REPOSITORY }}
+          ECR_BACKEND_REPOSITORY: 596432515527.dkr.ecr.ap-southeast-1.amazonaws.com/desacare-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           set -euo pipefail
-          docker build -t desacare-backend:$IMAGE_TAG ./backend
-          docker tag desacare-backend:$IMAGE_TAG $ECR_BACKEND_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_BACKEND_REPOSITORY:$IMAGE_TAG
+          docker build -t "$ECR_BACKEND_REPOSITORY:$IMAGE_TAG" ./backend
+          docker push "$ECR_BACKEND_REPOSITORY:$IMAGE_TAG"
