@@ -1,4 +1,4 @@
-﻿import { Menu, SlidersHorizontal } from 'lucide-react';
+import { ExternalLink, Menu, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar.jsx';
@@ -79,6 +79,7 @@ function KelolaPengajuan() {
                     <th className="px-5 py-3">Nama</th>
                     <th className="px-5 py-3">NIK</th>
                     <th className="px-5 py-3">Jenis Surat</th>
+                    <th className="px-5 py-3">File</th>
                     <th className="px-5 py-3">Tanggal</th>
                     <th className="px-5 py-3">Status</th>
                     <th className="px-5 py-3">Aksi</th>
@@ -91,6 +92,20 @@ function KelolaPengajuan() {
                       <td className="whitespace-nowrap px-5 py-4 font-semibold text-slate-900">{item.nama_lengkap}</td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{item.nik}</td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{item.jenis_surat}</td>
+                      <td className="whitespace-nowrap px-5 py-4">
+                        {item.file_url ? (
+                          <a
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-primary-700 hover:bg-primary-50"
+                            href={item.file_url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <ExternalLink size={14} /> Lihat file
+                          </a>
+                        ) : (
+                          <span className="text-slate-400">-</span>
+                        )}
+                      </td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{new Date(item.created_at).toLocaleDateString('id-ID')}</td>
                       <td className="whitespace-nowrap px-5 py-4"><StatusBadge status={item.status} /></td>
                       <td className="whitespace-nowrap px-5 py-4">

@@ -1,7 +1,9 @@
-﻿const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const path = require("path");
+
+dotenv.config();
+
 const pool = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
@@ -9,14 +11,11 @@ const pengajuanRoutes = require("./routes/pengajuanRoutes");
 const pengaduanRoutes = require("./routes/pengaduanRoutes");
 const statusRoutes = require("./routes/statusRoutes");
 
-dotenv.config();
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
 app.get("/", (req, res) => {
   return res.json({ message: "DesaCare API running" });

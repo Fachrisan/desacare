@@ -38,7 +38,6 @@ backend/
 │   │   ├── fileStorage.js
 │   │   └── generateTicket.js
 │   └── server.js
-├── uploads/
 ├── schema.sql
 ├── package.json
 ├── .env.example
@@ -82,7 +81,8 @@ JWT_SECRET=desacare_secret_key
 AWS_REGION=ap-southeast-1
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
-AWS_S3_BUCKET=
+S3_BUCKET_NAME=desacare-upload-fachri
+CLOUDFRONT_DOMAIN=d359gkva89ox7e.cloudfront.net
 ```
 
 Untuk AWS ECS + RDS, isi `DB_HOST` dengan endpoint RDS, bukan `localhost` dan bukan nama service Docker lokal seperti `mysql`.
@@ -91,9 +91,10 @@ Endpoint `GET /api/health` akan mencoba query database dan menampilkan ringkasan
 
 ## Aturan Upload File
 
-- Jika `AWS_S3_BUCKET` kosong, file disimpan ke `backend/uploads`.
-- Jika `AWS_S3_BUCKET` terisi (dan credential AWS valid), file di-upload ke Amazon S3.
-- URL file hasil upload disimpan ke database.
+- File dari `multipart/form-data` disimpan ke Amazon S3 private menggunakan `@aws-sdk/client-s3`.
+- Pengaduan memakai key `pengaduan/{timestamp}-{filename}`.
+- Pengajuan surat memakai key `pengajuan/{timestamp}-{filename}`.
+- URL yang disimpan ke database adalah URL CloudFront, bukan URL S3 langsung.
 
 ## Endpoint
 

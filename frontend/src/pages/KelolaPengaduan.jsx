@@ -1,4 +1,4 @@
-﻿import { Menu, SlidersHorizontal } from 'lucide-react';
+import { ExternalLink, Menu, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar.jsx';
@@ -79,6 +79,7 @@ function KelolaPengaduan() {
                     <th className="px-5 py-3">Pelapor</th>
                     <th className="px-5 py-3">Kategori</th>
                     <th className="px-5 py-3">Lokasi</th>
+                    <th className="px-5 py-3">Foto</th>
                     <th className="px-5 py-3">Tanggal</th>
                     <th className="px-5 py-3">Status</th>
                     <th className="px-5 py-3">Aksi</th>
@@ -91,6 +92,27 @@ function KelolaPengaduan() {
                       <td className="whitespace-nowrap px-5 py-4 font-semibold text-slate-900">{item.nama_pelapor}</td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{item.kategori}</td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{item.lokasi}</td>
+                      <td className="whitespace-nowrap px-5 py-4">
+                        {item.foto_url ? (
+                          <div className="flex items-center gap-3">
+                            <img
+                              className="h-12 w-16 rounded-md border border-slate-200 object-cover"
+                              src={item.foto_url}
+                              alt={`Foto pengaduan ${item.kode_tiket}`}
+                            />
+                            <a
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-primary-700 hover:text-primary-900"
+                              href={item.foto_url}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <ExternalLink size={14} /> Lihat gambar
+                            </a>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400">-</span>
+                        )}
+                      </td>
                       <td className="whitespace-nowrap px-5 py-4 text-slate-600">{new Date(item.created_at).toLocaleDateString('id-ID')}</td>
                       <td className="whitespace-nowrap px-5 py-4"><StatusBadge status={item.status} /></td>
                       <td className="whitespace-nowrap px-5 py-4">

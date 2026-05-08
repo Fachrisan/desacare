@@ -1,40 +1,33 @@
-﻿const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
-const hasS3Config = Boolean(
-  process.env.AWS_S3_BUCKET &&
-    process.env.AWS_REGION &&
-    process.env.AWS_ACCESS_KEY_ID &&
-    process.env.AWS_SECRET_ACCESS_KEY
-);
+const region = process.env.AWS_REGION || "ap-southeast-1";
+const bucketName = process.env.S3_BUCKET_NAME;
+const cloudFrontDomain = process.env.CLOUDFRONT_DOMAIN;
 
-const s3Client = hasS3Config
-  ? new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    })
-  : null;
+const s3Client = new S3Client({ region });
 
 const uploadToS3 = async ({ key, buffer, contentType }) => {
-  if (!s3Client || !process.env.AWS_S3_BUCKET) {
-    throw new Error("S3 belum dikonfigurasi.");
+  if (!bucketName || !cloudFrontDomain) {
+    throw new Error("S3 atau CloudFront belum dikonfigurasi.");
   }
 
   const command = new PutObjectCommand({
-    Bucket: process.env.AWS_S3_BUCKET,
+    Bucket: bucketName,
     Key: key,
     Body: buffer,
     ContentType: contentType,
   });
 
-  await s3Client.send(command);
+  try {
+    await s3Client.send(command);
+  } catch (error) {
+    console.error("ERROR UPLOAD S3:", error);
+    throw error;
+  }
 
-  return `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  return `https://${cloudFrontDomain}/${key}`;
 };
 
 module.exports = {
-  hasS3Config,
   uploadToS3,
 };
