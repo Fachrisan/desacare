@@ -4,6 +4,8 @@ const { storeFile } = require("../utils/fileStorage");
 
 const createPengaduan = async (req, res) => {
   try {
+    console.log("DATA MASUK PENGADUAN:", req.body);
+
     const { nama_pelapor, nomor_hp, kategori, lokasi, isi_pengaduan } = req.body;
 
     if (!nama_pelapor || !nomor_hp || !kategori || !lokasi || !isi_pengaduan) {
@@ -25,7 +27,11 @@ const createPengaduan = async (req, res) => {
       data: { id: result.insertId, kode_tiket },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Gagal membuat pengaduan.", error: error.message });
+    console.error("ERROR SIMPAN PENGADUAN:", error);
+    return res.status(500).json({
+      message: "Gagal menyimpan pengaduan",
+      error: error.message,
+    });
   }
 };
 
