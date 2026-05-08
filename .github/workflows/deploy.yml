@@ -31,6 +31,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Verify AWS credentials
+        run: |
+          aws sts get-caller-identity
+
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
@@ -39,14 +43,20 @@ jobs:
           ECR_FRONTEND_REPOSITORY: ${{ secrets.ECR_FRONTEND_REPOSITORY }}
           ECR_BACKEND_REPOSITORY: ${{ secrets.ECR_BACKEND_REPOSITORY }}
         run: |
+          set -euo pipefail
           test -n "$ECR_FRONTEND_REPOSITORY" || (echo "ECR_FRONTEND_REPOSITORY secret is not set" && exit 1)
           test -n "$ECR_BACKEND_REPOSITORY" || (echo "ECR_BACKEND_REPOSITORY secret is not set" && exit 1)
+          FRONTEND_REPOSITORY_NAME="${ECR_FRONTEND_REPOSITORY#*/}"
+          BACKEND_REPOSITORY_NAME="${ECR_BACKEND_REPOSITORY#*/}"
+          aws ecr describe-repositories --repository-names "$FRONTEND_REPOSITORY_NAME"
+          aws ecr describe-repositories --repository-names "$BACKEND_REPOSITORY_NAME"
 
       - name: Build, tag, and push frontend image
         env:
           ECR_FRONTEND_REPOSITORY: ${{ secrets.ECR_FRONTEND_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          set -euo pipefail
           docker build -t desacare-frontend:$IMAGE_TAG ./frontend
           docker tag desacare-frontend:$IMAGE_TAG $ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
           docker push $ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
@@ -56,6 +66,7 @@ jobs:
           ECR_BACKEND_REPOSITORY: ${{ secrets.ECR_BACKEND_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          set -euo pipefail
           docker build -t desacare-backend:$IMAGE_TAG ./backend
           docker tag desacare-backend:$IMAGE_TAG $ECR_BACKEND_REPOSITORY:$IMAGE_TAG
           docker push $ECR_BACKEND_REPOSITORY:$IMAGE_TAG
